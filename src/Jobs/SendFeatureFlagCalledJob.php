@@ -38,18 +38,20 @@ class SendFeatureFlagCalledJob implements ShouldQueue
      */
     public function handle(): void
     {
-        if (empty($this->featureFlag) || empty($this->participant)) return;
+        if (empty($this->featureFlag) || empty($this->participant)) {
+            return;
+        }
 
         $domain = trim(config('posthog-experiments.domain'), '/');
         $resp = Http::post("{$domain}/capture", [
-            "api_key" => config('posthog-experiments.key'),
-            "event" => '$feature_flag_called',
-            "properties" => [
+            'api_key' => config('posthog-experiments.key'),
+            'event' => '$feature_flag_called',
+            'properties' => [
                 'distinct_id' => $this->participant,
                 '$feature_flag_response' => $this->featureFlag,
-                '$feature_flag' => $this->experiment
+                '$feature_flag' => $this->experiment,
             ],
-            "timestamp" => date(DATE_ISO8601)
+            'timestamp' => date(DATE_ISO8601),
         ]);
 
         if ($resp->failed()) {
