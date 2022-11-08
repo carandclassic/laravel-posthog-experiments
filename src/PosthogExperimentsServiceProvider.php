@@ -2,7 +2,7 @@
 
 namespace CarAndClassic\PosthogExperiments;
 
-use CarAndClassic\PosthogExperiments\Commands\PosthogExperimentsCommand;
+use CarAndClassic\PosthogExperiments\View\Components\Experiment;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -18,8 +18,6 @@ class PosthogExperimentsServiceProvider extends PackageServiceProvider
         $package
             ->name('posthog-experiments')
             ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_posthog-experiments_table')
-            ->hasCommand(PosthogExperimentsCommand::class);
+            ->hasViewComponent('posthog', Experiment::class);
     }
 }
