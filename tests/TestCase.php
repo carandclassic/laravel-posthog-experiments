@@ -2,9 +2,9 @@
 
 namespace CarAndClassic\PosthogExperiments\Tests;
 
+use CarAndClassic\PosthogExperiments\PosthogExperimentsServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use CarAndClassic\PosthogExperiments\PosthogExperimentsServiceProvider;
 
 class TestCase extends Orchestra
 {
