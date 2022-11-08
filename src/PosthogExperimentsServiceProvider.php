@@ -2,9 +2,9 @@
 
 namespace CarAndClassic\PosthogExperiments;
 
+use CarAndClassic\PosthogExperiments\Commands\PosthogExperimentsCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use CarAndClassic\PosthogExperiments\Commands\PosthogExperimentsCommand;
 
 class PosthogExperimentsServiceProvider extends PackageServiceProvider
 {
