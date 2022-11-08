@@ -15,7 +15,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Application Name
+    | PostHog Cookie Session Name
     |--------------------------------------------------------------------------
     |
     | This value is the fallback unique identifier
@@ -23,4 +23,15 @@ return [
     |
     */
     'cookie_key' => env('POSTHOG_COOKIE_KEY', 'laravel_session'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | PostHog Domain
+    |--------------------------------------------------------------------------
+    |
+    | This value is the PostHog domain that
+    | Should be used for the API calls.
+    |
+    */
+    'domain' => env('POSTHOG_DOMAIN', 'https://app.posthog.com'),
 ];
