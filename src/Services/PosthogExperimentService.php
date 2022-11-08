@@ -17,21 +17,21 @@ class PosthogExperimentService
             $cookie = request()->cookie(config('posthog-experiments.cookie_key'));
             $cookieAnonymised = md5($cookie);
 
-            if ($userId && cache()->has($experiment . $cookieAnonymised)) {
+            if ($userId && cache()->has($experiment.$cookieAnonymised)) {
                 $participant = $userId;
-                self::setAlias(md5((string)$participant), $cookieAnonymised);
-            } else if ($userId) {
+                self::setAlias(md5((string) $participant), $cookieAnonymised);
+            } elseif ($userId) {
                 $participant = $userId;
             } else {
                 $participant = $cookie;
             }
         }
 
-        if (!$participant) {
+        if (! $participant) {
             return '';
         }
 
-        $participantAnonymised = md5((string)$participant);
+        $participantAnonymised = md5((string) $participant);
 
         if ($override) {
             SendFeatureFlagCalledJob::dispatch($experiment, $override, $participantAnonymised);
@@ -40,16 +40,17 @@ class PosthogExperimentService
         }
 
         $featureFlag = cache()->rememberForever(
-            $experiment . $participantAnonymised,
+            $experiment.$participantAnonymised,
             static function () use ($experiment, $participantAnonymised): string {
                 $domain = trim(config('posthog-experiments.domain'), '/');
                 $resp = Http::post("{$domain}/decide?v=2", [
-                    "api_key" => config('posthog-experiments.key'),
-                    "distinct_id" => $participantAnonymised
+                    'api_key' => config('posthog-experiments.key'),
+                    'distinct_id' => $participantAnonymised,
                 ]);
 
                 if ($resp->failed()) {
                     Log::error('Failed to get a PostHog feature flag', ['experiment' => $experiment, 'participant' => $participantAnonymised]);
+
                     return '';
                 }
 
@@ -58,7 +59,8 @@ class PosthogExperimentService
         );
 
         if (empty($featureFlag)) {
-            cache()->forget($experiment . $participantAnonymised);
+            cache()->forget($experiment.$participantAnonymised);
+
             return '';
         }
 
@@ -78,19 +80,21 @@ class PosthogExperimentService
 
     private static function setAlias(string|int $participant = '', string $alias = ''): void
     {
-        if (empty($participant) || empty($alias)) return;
+        if (empty($participant) || empty($alias)) {
+            return;
+        }
 
         $domain = trim(config('posthog-experiments.domain'), '/');
         $resp = Http::post("{$domain}/capture", [
-            "api_key" => config('posthog-experiments.key'),
-            "properties" => [
+            'api_key' => config('posthog-experiments.key'),
+            'properties' => [
                 'distinct_id' => $participant,
-                'alias' => $alias
+                'alias' => $alias,
             ],
-            "timestamp" => date(DATE_ISO8601),
-            "context" => "{}",
-            "type" => "alias",
-            "event" => '$create_alias'
+            'timestamp' => date(DATE_ISO8601),
+            'context' => '{}',
+            'type' => 'alias',
+            'event' => '$create_alias',
         ]);
 
         if ($resp->failed()) {
