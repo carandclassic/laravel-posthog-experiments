@@ -18,7 +18,7 @@ class ExampleTest extends TestCase
         Http::fake([
             '*' => Http::response([
                 "featureFlags" => [
-                    "sell-your-classic-test" => "input_cta_change"
+                    "test" => "input_cta_change"
                 ],
             ], 200),
         ]);
