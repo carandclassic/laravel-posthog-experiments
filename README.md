@@ -67,7 +67,7 @@ The `PosthogExperiments` alias has the below static methods.
 | Attribute | Description | Required |
 | --- | --- | --- |
 | experiment | (string) The feature flag key | ✅ |
-| participant | (string|int) The unique distinct ID |  |
+| participant | (string\|int) The unique distinct ID |  |
 | override | (string) The feature flag to always return |  |
 
 This method retrieves the feature flag based on the feature flag key and the unique distinct ID. It also takes in an `override` where when testing you can set the feature flag to always return a specific value.
@@ -81,8 +81,8 @@ Once a feature flag has been retrieved the `[SendFeatureFlagCalledJob](https://w
 | Attribute | Description | Required |
 | --- | --- | --- |
 | experiment | (string) The feature flag key | ✅ |
-| featureFlag | (string|array) The flag(s) to check | ✅ |
-| participant | (string|int) The unique distinct ID |  |
+| featureFlag | (string\|array) The flag(s) to check | ✅ |
+| participant | (string\|int) The unique distinct ID |  |
 
 This method helps with checking whether the feature flag that is being used is a specific one or is one of a couple options. `experiment` and `participant` is needed to get the correct feature flag and `featureFlag` is to test against. The `featureFlag` can be a string on array so that more feature flags can be checked against. This is helpful if you would like to have a form request be required for a specific field if two of three feature flags are set. You could then use something like:
 
