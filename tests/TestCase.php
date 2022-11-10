@@ -1,20 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CarAndClassic\PosthogExperiments\Tests;
 
 use CarAndClassic\PosthogExperiments\PosthogExperimentsServiceProvider;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
 
-class TestCase extends Orchestra
+abstract class TestCase extends Orchestra
 {
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
-
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'CarAndClassic\\PosthogExperiments\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );
     }
 
     protected function getPackageProviders($app)
@@ -22,15 +19,5 @@ class TestCase extends Orchestra
         return [
             PosthogExperimentsServiceProvider::class,
         ];
-    }
-
-    public function getEnvironmentSetUp($app)
-    {
-        config()->set('database.default', 'testing');
-
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_posthog-experiments_table.php.stub';
-        $migration->up();
-        */
     }
 }

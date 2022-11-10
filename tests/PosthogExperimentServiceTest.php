@@ -8,9 +8,9 @@ use CarAndClassic\PosthogExperiments\PosthogExperiments;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
-class ExampleTest extends TestCase
+class PosthogExperimentTest extends TestCase
 {
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -18,7 +18,7 @@ class ExampleTest extends TestCase
         Http::fake([
             '*' => Http::response([
                 'featureFlags' => [
-                    'test' => 'input_cta_change',
+                    'test' => 'test_a',
                 ],
             ], 200),
         ]);
@@ -31,7 +31,27 @@ class ExampleTest extends TestCase
 
         $featureFlag = PosthogExperiments::getFeatureFlag($experiment, $participant);
 
-        $this->assertSame('input_cta_change', $featureFlag);
+        $this->assertSame('test_a', $featureFlag);
         $this->assertTrue(Cache::has($experiment.md5($participant)));
+    }
+
+    public function testItCanTestIfSpecificFeatureFlagsAreSetByPassingInAnArray(): void
+    {
+        $experiment = 'test';
+        $participant = '1';
+
+        $hasFeatureFlag = PosthogExperiments::hasFeatureFlag($experiment, ['test_a'], $participant);
+
+        $this->assertTrue($hasFeatureFlag);
+    }
+
+    public function testItCanTestIfSpecificFeatureFlagsAreSetByPassingInAString(): void
+    {
+        $experiment = 'test';
+        $participant = '1';
+
+        $hasFeatureFlag = PosthogExperiments::hasFeatureFlag($experiment, 'test_a', $participant);
+
+        $this->assertTrue($hasFeatureFlag);
     }
 }
