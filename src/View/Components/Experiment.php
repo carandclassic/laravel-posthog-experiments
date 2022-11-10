@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CarAndClassic\PosthogExperiments\View\Components;
 
-use CarAndClassic\PosthogExperiments\Services\PosthogExperimentService;
+use CarAndClassic\PosthogExperiments\PosthogExperiments;
 use Illuminate\View\Component;
 
 class Experiment extends Component
@@ -14,7 +14,7 @@ class Experiment extends Component
         private string $participant = '',
         private string $featureFlag = '',
     ) {
-        $this->featureFlag = PosthogExperimentService::getFeatureFlag(
+        $this->featureFlag = PosthogExperiments::getFeatureFlag(
             $experiment,
             $participant,
             request()->input('posthog', '')
