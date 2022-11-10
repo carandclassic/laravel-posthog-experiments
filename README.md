@@ -48,11 +48,13 @@ Here we have an experiment that can be broken down to:
 | Attribute | Description | Required |
 | --- | --- | --- |
 | experiment | The Feature flag key | ✅ |
-| participant | A unique distinct ID |  |
+| participant | A unique distinct ID* |  |
 | x-slot | The slots are for the variants. Each variant get’s it’s own slot, for example if you have three variants, control, blue_button and red_button you would need three slots, one for each variant. The code that is in the slot will be shown | Not necessary but you should add at least one. |
 | fallback | Any code that is in the same nesting as the slots will be used as a fallback. If a fallback isn’t present, the component will look for a control slot, if there is no control slot, then an empty string is returned and nothing is shown to the user. |  |
 
 You can also provide an `override` by adding a `posthog` query parameter that matches a variant. For example `https://your-cool-site.com?posthog=test_b`.
+
+* The `participant` unique distinct ID is not required, if one is not passed in the method will check if the user is logged in and use the logged in users id. If the user is not logged in, the method will try get the Laravel session and if the session is not set (being in a private/incognito window for example) the method will return an empty string which will then let the fallback or control be shown (depending on how the component is being used.) The `$participant` variable is anonymised so that we do not send any form of personal identifiable info to PostHog, this also adds a layer of security by not sending information that can be intercepted and changed by the user.
 
 You can also use the `PosthogExperiments` alias to get access to helpful static methods. For example:
 
