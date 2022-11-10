@@ -22,7 +22,7 @@ class Experiment extends Component
 
     public function render(): \Closure
     {
-        return fn (array $data): string => (string)collect([
+        return fn (array $data): string => (string) collect([
             $data['__laravel_slots'][$this->featureFlag]?->toHtml(),
             $data['slot']?->toHtml(),
             $data['__laravel_slots']['control']?->toHtml(),
