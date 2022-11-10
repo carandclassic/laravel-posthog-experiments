@@ -54,7 +54,7 @@ Here we have an experiment that can be broken down to:
 
 You can also provide an `override` by adding a `posthog` query parameter that matches a variant. For example `https://your-cool-site.com?posthog=test_b`.
 
-* The `participant` unique distinct ID is not required, if one is not passed in the method will check if the user is logged in and use the logged in users id. If the user is not logged in, the method will try get the Laravel session and if the session is not set (being in a private/incognito window for example) the method will return an empty string which will then let the fallback or control be shown (depending on how the component is being used.) The `$participant` variable is anonymised so that we do not send any form of personal identifiable info to PostHog, this also adds a layer of security by not sending information that can be intercepted and changed by the user.
+* The `participant` unique distinct ID is not required, if one is not passed in the method will check if the user is logged in and use the logged in users id. If the user is not logged in, the method will try get the Laravel session and if the session is not set (being in a private/incognito window for example) the method will return an empty string which will then let the fallback or control be shown (depending on how the component is being used.) The `participant` variable is anonymised so that we do not send any form of personal identifiable info to PostHog, this also adds a layer of security by not sending information that can be intercepted and changed by the user.
 
 You can also use the `PosthogExperiments` alias to get access to helpful static methods. For example:
 
