@@ -27,7 +27,7 @@ class Experiment extends Component
                 return $data['__laravel_slots'][$this->featureFlag]->toHtml();
             }
 
-            if (!empty($data['slot']->toHtml())) {
+            if (! empty($data['slot']->toHtml())) {
                 return $data['slot']->toHtml();
             }
 
