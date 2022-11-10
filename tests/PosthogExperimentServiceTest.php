@@ -35,7 +35,7 @@ class PosthogExperimentServiceTest extends TestCase
         $featureFlag = PosthogExperimentsService::getFeatureFlag($experiment, $participant);
 
         $this->assertSame('test_a', $featureFlag);
-        $this->assertTrue(Cache::has($experiment . md5($participant)));
+        $this->assertTrue(Cache::has($experiment.md5($participant)));
         Queue::after(function (SendFeatureFlagCalledJob $event) {
             $this->assertTrue($event->job->isReleased());
         });
@@ -49,7 +49,7 @@ class PosthogExperimentServiceTest extends TestCase
         $featureFlag = PosthogExperimentsService::getFeatureFlag($experiment, $participant);
 
         $this->assertSame('', $featureFlag);
-        $this->assertFalse(Cache::has($experiment . md5($participant)));
+        $this->assertFalse(Cache::has($experiment.md5($participant)));
     }
 
     public function testItCanTestIfSpecificFeatureFlagsAreSetByPassingInAnArray(): void
