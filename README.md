@@ -49,12 +49,12 @@ Here we have an experiment that can be broken down to:
 | --- | --- | --- |
 | experiment | The Feature flag key | ✅ |
 | participant | A unique distinct ID`*` |  |
-| x-slot | The slots are for the variants. Each variant get’s it’s own slot, for example if you have three variants, control, blue_button and red_button you would need three slots, one for each variant. The code that is in the slot will be shown | Not necessary but you should add at least one. |
-| fallback | Any code that is in the same nesting as the slots will be used as a fallback. If a fallback isn’t present, the component will look for a control slot, if there is no control slot, then an empty string is returned and nothing is shown to the user. |  |
+| x-slot | The slots are for the variants. Each variant get’s it’s own slot, for example if you have three variants, control, test_a and test_b you would need three slots, one for each variant. The code that is in the slot will be shown | Not necessary but you should add at least one. |
+| fallback | Any code that is in the same nesting as the slots will be used as a fallback. If a fallback isn’t present, the component will look for a `control` slot, if there is no control slot, then an empty string is returned and nothing is shown to the user. |  |
 
-You can also provide an `override` by adding a `posthog` query parameter that matches a variant. For example `https://your-cool-site.com?posthog=test_b`.
+You can also provide an `override` by adding a `posthog` query parameter that matches a variant. For example `https://your-cool-site.com?posthog=test_b`. The `posthog` override query parameter can be changed to something else in the config.
 
-`*` The `participant` unique distinct ID is not required, if one is not passed in the method will check if the user is logged in and use the logged in users id. If the user is not logged in, the method will try get the Laravel session and if the session is not set (being in a private/incognito window for example) the method will return an empty string which will then let the fallback or control be shown (depending on how the component is being used.) The `participant` variable is anonymised so that we do not send any form of personal identifiable info to PostHog, this also adds a layer of security by not sending information that can be intercepted and changed by the user.
+`*` The `participant` unique distinct ID is not required, if one is not passed in the component will check if the user is logged in and use the logged in user's id. If the user is not logged in, the method will try get the Laravel session and if the session is not set (being in a private/incognito window for example) the component will return an empty string which will then let the fallback or control be shown (depending on how the component is being used.) The `participant` is anonymised so that we do not send any form of personal identifiable info to PostHog, this also adds a layer of security by not sending information that can be intercepted and changed by the user.
 
 You can also use the `PosthogExperiments` alias to get access to helpful static methods. For example:
 
@@ -62,21 +62,21 @@ You can also use the `PosthogExperiments` alias to get access to helpful static 
 PosthogExperiments::getFeatureFlag('experiment-feature-key');
 ```
 
-The `PosthogExperiments` alias has the below static methods.
+The `PosthogExperiments` alias has the below static methods that you can use.
 
 ## getFeatureFlag
 
 | Attribute | Description | Required |
 | --- | --- | --- |
 | experiment | (string) The feature flag key | ✅ |
-| participant | (string\|int) The unique distinct ID |  |
+| participant | (string\|int) The unique distinct ID`*` |  |
 | override | (string) The feature flag to always return |  |
 
 This method retrieves the feature flag based on the feature flag key and the unique distinct ID. It also takes in an `override` where when testing you can set the feature flag to always return a specific value.
 
-The `$participant` variable is not required, if one is not passed in the method will check if the user is logged in and use the logged in users id. If the user is not logged in, the method will try get the Laravel session and if the session is not set (being in a private/incognito window for example) the method will return an empty string which will then let the fallback or control be shown (depending on how the component is being used.) The `$participant` variable is anonymised so that we do not send any form of personal identifiable info to PostHog, this also adds a layer of security by not sending information that can be intercepted and changed by the user.
+`*` The `participant` parameter is not required, if one is not passed in the method will check if the user is logged in and use the logged in users id. If the user is not logged in, the method will try get the Laravel session and if the session is not set (being in a private/incognito window for example) the method will return an empty string which will then let the fallback or control be shown (depending on how the component is being used.) The `participant` parameter is anonymised so that we do not send any form of personal identifiable info to PostHog, this also adds a layer of security by not sending information that can be intercepted and changed by the user.
 
-Once a feature flag has been retrieved the `[SendFeatureFlagCalledJob](https://www.notion.so/PostHog-Experiments-Integration-25a2c6c5c1964da7b68a803157119f08)` job is called to track the feature flag of the participant.
+Once a feature flag has been retrieved the [SendFeatureFlagCalledJob](https://www.notion.so/PostHog-Experiments-Integration-25a2c6c5c1964da7b68a803157119f08) job is called to track the feature flag of the participant.
 
 ## hasFeatureFlag
 
@@ -84,9 +84,9 @@ Once a feature flag has been retrieved the `[SendFeatureFlagCalledJob](https://w
 | --- | --- | --- |
 | experiment | (string) The feature flag key | ✅ |
 | featureFlag | (string\|array) The flag(s) to check | ✅ |
-| participant | (string\|int) The unique distinct ID |  |
+| participant | (string\|int) The unique distinct ID`*` |  |
 
-This method helps with checking whether the feature flag that is being used is a specific one or is one of a couple options. `experiment` and `participant` is needed to get the correct feature flag and `featureFlag` is to test against. The `featureFlag` can be a string on array so that more feature flags can be checked against. This is helpful if you would like to have a form request be required for a specific field if two of three feature flags are set. You could then use something like:
+This method helps with checking whether the feature flag that is being used is a specific one or is one of a couple options. `experiment` and `participant` are needed to get the correct feature flag and `featureFlag` is to test against. The `featureFlag` can be a string or array so that more feature flags can be checked against. This is helpful if you would like to have a form request be required for a specific field if two of three feature flags are set. You could then use something like:
 
 ```php
 public function rules(): array
@@ -100,12 +100,12 @@ public function rules(): array
 }
 ```
 
-The `$participant` variable is not required, if one is not passed in the method will check if the user is logged in and use the logged in users id. If the user is not logged int, the method will try get the Laravel session and if the session is not set (being in a private/incognito window for example) false will be returned.
+`*` The `participant` parameter is not required, if one is not passed in the method will check if the user is logged in and use the logged in users id. If the user is not logged in, the method will try get the Laravel session and if the session is not set (being in a private/incognito window for example) the method will return an empty string which will then let the fallback or control be shown (depending on how the component is being used.) The `participant` parameter is anonymised so that we do not send any form of personal identifiable info to PostHog, this also adds a layer of security by not sending information that can be intercepted and changed by the user.
 
 ## Testing
 
 ```bash
-composer test
+./vendor/bin/phpunit
 ```
 
 ## Changelog
@@ -115,10 +115,6 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 ## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-## Security Vulnerabilities
-
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
 
 ## License
 
