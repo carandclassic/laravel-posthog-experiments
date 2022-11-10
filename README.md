@@ -62,7 +62,7 @@ PosthogExperiments::getFeatureFlag('experiment-feature-key');
 
 The `PosthogExperiments` alias has the below static methods.
 
-`**getFeatureFlag**`
+## getFeatureFlag
 
 | Attribute | Description | Required |
 | --- | --- | --- |
@@ -76,7 +76,7 @@ The `$participant` variable is not required, if one is not passed in the method 
 
 Once a feature flag has been retrieved the `[SendFeatureFlagCalledJob](https://www.notion.so/PostHog-Experiments-Integration-25a2c6c5c1964da7b68a803157119f08)` job is called to track the feature flag of the participant.
 
-`**hasFeatureFlag**`
+## hasFeatureFlag
 
 | Attribute | Description | Required |
 | --- | --- | --- |
