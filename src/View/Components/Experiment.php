@@ -22,12 +22,20 @@ class Experiment extends Component
 
     public function render(): \Closure
     {
-        return fn (array $data): string => (string) collect([
-            $data['__laravel_slots'][$this->featureFlag]?->toHtml(),
-            $data['slot']?->toHtml(),
-            $data['__laravel_slots']['control']?->toHtml(),
-        ])
-            ->filter()
-            ->first();
+        return function (array $data): string {
+            if (isset($data['__laravel_slots'][$this->featureFlag])) {
+                return $data['__laravel_slots'][$this->featureFlag]->toHtml();
+            }
+
+            if (!empty($data['slot']->toHtml())) {
+                return $data['slot']->toHtml();
+            }
+
+            if (isset($data['__laravel_slots']['control'])) {
+                return $data['__laravel_slots']['control']->toHtml();
+            }
+
+            return '';
+        };
     }
 }
