@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CarAndClassic\PosthogExperiments\Tests;
 
-use CarAndClassic\PosthogExperiments\PosthogExperiments;
+use CarAndClassic\PosthogExperiments\PosthogExperimentsService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -29,10 +29,10 @@ class PosthogExperimentTest extends TestCase
         $experiment = 'test';
         $participant = '1';
 
-        $featureFlag = PosthogExperiments::getFeatureFlag($experiment, $participant);
+        $featureFlag = PosthogExperimentsService::getFeatureFlag($experiment, $participant);
 
         $this->assertSame('test_a', $featureFlag);
-        $this->assertTrue(Cache::has($experiment.md5($participant)));
+        $this->assertTrue(Cache::has($experiment . md5($participant)));
     }
 
     public function testItCanTestIfSpecificFeatureFlagsAreSetByPassingInAnArray(): void
@@ -40,7 +40,7 @@ class PosthogExperimentTest extends TestCase
         $experiment = 'test';
         $participant = '1';
 
-        $hasFeatureFlag = PosthogExperiments::hasFeatureFlag($experiment, ['test_a'], $participant);
+        $hasFeatureFlag = PosthogExperimentsService::hasFeatureFlag($experiment, ['test_a'], $participant);
 
         $this->assertTrue($hasFeatureFlag);
     }
@@ -50,7 +50,7 @@ class PosthogExperimentTest extends TestCase
         $experiment = 'test';
         $participant = '1';
 
-        $hasFeatureFlag = PosthogExperiments::hasFeatureFlag($experiment, 'test_a', $participant);
+        $hasFeatureFlag = PosthogExperimentsService::hasFeatureFlag($experiment, 'test_a', $participant);
 
         $this->assertTrue($hasFeatureFlag);
     }

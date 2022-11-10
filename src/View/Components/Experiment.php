@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace CarAndClassic\PosthogExperiments\View\Components;
 
-use CarAndClassic\PosthogExperiments\PosthogExperiments;
+use CarAndClassic\PosthogExperiments\PosthogExperimentsService;
 use Illuminate\View\Component;
 
 class Experiment extends Component
 {
-    public function __construct(
-        private string $experiment,
-        private string $participant = '',
-        private string $featureFlag = '',
-    ) {
-        $this->featureFlag = PosthogExperiments::getFeatureFlag(
+    private string $featureFlag = '';
+
+    public function __construct(string $experiment, string $participant = '')
+    {
+        $this->featureFlag = PosthogExperimentsService::getFeatureFlag(
             $experiment,
             $participant,
             request()->input(config('posthog-experiments.override_query_parameter'), '')
@@ -23,11 +22,12 @@ class Experiment extends Component
 
     public function render(): \Closure
     {
-        return function (array $data): string {
-            return $data['__laravel_slots'][$this->featureFlag]?->toHtml()
-                ?? $data['slot']?->toHtml()
-                ?: $data['__laravel_slots']['control']?->toHtml()
-                ?? '';
-        };
+        return fn (array $data): string => (string)collect([
+            $data['__laravel_slots'][$this->featureFlag]?->toHtml(),
+            $data['slot']?->toHtml(),
+            $data['__laravel_slots']['control']?->toHtml(),
+        ])
+            ->filter()
+            ->first();
     }
 }

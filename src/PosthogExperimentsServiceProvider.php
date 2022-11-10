@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CarAndClassic\PosthogExperiments;
 
 use CarAndClassic\PosthogExperiments\View\Components\Experiment;

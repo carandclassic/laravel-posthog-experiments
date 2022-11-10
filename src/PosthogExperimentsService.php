@@ -8,7 +8,7 @@ use CarAndClassic\PosthogExperiments\Jobs\SendFeatureFlagCalledJob;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class PosthogExperiments
+class PosthogExperimentsService
 {
     public static function getFeatureFlag(string $experiment, string|int $participant = '', string $override = ''): string
     {
@@ -17,7 +17,7 @@ class PosthogExperiments
             $cookie = request()->cookie(config('posthog-experiments.cookie_key'));
             $cookieAnonymised = md5($cookie);
 
-            if ($userId && cache()->has($experiment.$cookieAnonymised)) {
+            if ($userId && cache()->has($experiment . $cookieAnonymised)) {
                 $participant = $userId;
                 self::setAlias(md5((string) $participant), $cookieAnonymised);
             } elseif ($userId) {
@@ -40,7 +40,7 @@ class PosthogExperiments
         }
 
         $featureFlag = cache()->rememberForever(
-            $experiment.$participantAnonymised,
+            $experiment . $participantAnonymised,
             static function () use ($experiment, $participantAnonymised): string {
                 $domain = trim(config('posthog-experiments.domain'), '/');
                 $resp = Http::post("{$domain}/decide?v=2", [
@@ -59,7 +59,7 @@ class PosthogExperiments
         );
 
         if (empty($featureFlag)) {
-            cache()->forget($experiment.$participantAnonymised);
+            cache()->forget($experiment . $participantAnonymised);
 
             return '';
         }
