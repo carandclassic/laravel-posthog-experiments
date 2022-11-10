@@ -17,7 +17,7 @@ class Experiment extends Component
         $this->featureFlag = PosthogExperiments::getFeatureFlag(
             $experiment,
             $participant,
-            request()->input('posthog', '')
+            request()->input(config('posthog-experiments.override_query_parameter'), '')
         );
     }
 

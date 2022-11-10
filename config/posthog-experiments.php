@@ -34,4 +34,15 @@ return [
     |
     */
     'domain' => env('POSTHOG_DOMAIN', 'https://app.posthog.com'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | PostHog Override Query Parameter
+    |--------------------------------------------------------------------------
+    |
+    | This value allows the Blade component to be set to a specific value
+    | So that you can test the different variants.
+    |
+    */
+    'override_query_parameter' => env('POSTHOG_OVERRIDE_QUERY_PARAMETER', 'posthog'),
 ];
