@@ -17,8 +17,8 @@ class ExampleTest extends TestCase
         Cache::flush();
         Http::fake([
             '*' => Http::response([
-                "featureFlags" => [
-                    "test" => "input_cta_change"
+                'featureFlags' => [
+                    'test' => 'input_cta_change',
                 ],
             ], 200),
         ]);
@@ -32,6 +32,6 @@ class ExampleTest extends TestCase
         $featureFlag = PosthogExperiments::getFeatureFlag($experiment, $participant);
 
         $this->assertSame('input_cta_change', $featureFlag);
-        $this->assertTrue(Cache::has($experiment . md5($participant)));
+        $this->assertTrue(Cache::has($experiment.md5($participant)));
     }
 }
