@@ -56,6 +56,8 @@ You can also provide an `override` by adding a `posthog` query parameter that ma
 
 `*` The `participant` unique distinct ID is not required, if one is not passed in the component will check if the user is logged in and use the logged in user's id. If the user is not logged in, the method will try get the Laravel session and if the session is not set (being in a private/incognito window for example) the component will return an empty string which will then let the fallback or control be shown (depending on how the component is being used.) The `participant` is anonymised so that we do not send any form of personal identifiable info to PostHog, this also adds a layer of security by not sending information that can be intercepted and changed by the user.
 
+## `PosthogExperiments` alias
+
 You can also use the `PosthogExperiments` alias to get access to helpful static methods. For example:
 
 ```php
@@ -64,7 +66,7 @@ PosthogExperiments::getFeatureFlag('experiment-feature-key');
 
 The `PosthogExperiments` alias has the below static methods that you can use.
 
-## getFeatureFlag
+### getFeatureFlag
 
 | Attribute | Description | Required |
 | --- | --- | --- |
@@ -78,7 +80,7 @@ This method retrieves the feature flag based on the feature flag key and the uni
 
 Once a feature flag has been retrieved the [SendFeatureFlagCalledJob](https://www.notion.so/PostHog-Experiments-Integration-25a2c6c5c1964da7b68a803157119f08) job is called to track the feature flag of the participant.
 
-## hasFeatureFlag
+### hasFeatureFlag
 
 | Attribute | Description | Required |
 | --- | --- | --- |
@@ -101,6 +103,26 @@ public function rules(): array
 ```
 
 `*` The `participant` parameter is not required, if one is not passed in the method will check if the user is logged in and use the logged in users id. If the user is not logged in, the method will try get the Laravel session and if the session is not set (being in a private/incognito window for example) the method will return an empty string which will then let the fallback or control be shown (depending on how the component is being used.) The `participant` parameter is anonymised so that we do not send any form of personal identifiable info to PostHog, this also adds a layer of security by not sending information that can be intercepted and changed by the user.
+
+## `hasFeatureFlag` Blade directive
+
+You can also use the `hasFeatureFlag` blade directive in your views. For example:
+
+```blade
+@hasFeatureFlag('experiment-feature-key', 'control')
+    <a href="/control">Try the control</a>
+@elsehasFeatureFlag('experiment-feature-key', 'test_a')
+    <a href="/test-a">Try test A</a>
+@elsehasFeatureFlag('experiment-feature-key', 'test_b')
+    <a href="/test-b">Try test B</a>
+@else
+    <a href="/fallback">Show fallback</a>
+@endhasFeatureFlag
+```
+
+The Blade directive takes in the experiment, feature flag and participant. The experiment and feature flags are required, but the participant is handled behind the scenes if left out.
+
+You can also provide an `override` by adding a `posthog` query parameter that matches a variant. For example `https://your-cool-site.com?posthog=test_b`. The `posthog` override query parameter can be changed to something else in the config.
 
 ## Testing
 
