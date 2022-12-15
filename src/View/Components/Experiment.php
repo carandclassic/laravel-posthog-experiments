@@ -11,7 +11,7 @@ class Experiment extends Component
 {
     private string $featureFlag = '';
 
-    public function __construct(string $experiment, string $participant = '')
+    public function __construct(string $experiment, string $participant = '', private string $fallback = 'control')
     {
         $this->featureFlag = PosthogExperimentsService::getFeatureFlag(
             $experiment,
@@ -31,8 +31,8 @@ class Experiment extends Component
                 return $data['slot']->toHtml();
             }
 
-            if (isset($data['__laravel_slots']['control'])) {
-                return $data['__laravel_slots']['control']->toHtml();
+            if (isset($data['__laravel_slots'][$this->fallback])) {
+                return $data['__laravel_slots'][$this->fallback]->toHtml();
             }
 
             return '';
