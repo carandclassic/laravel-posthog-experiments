@@ -108,6 +108,37 @@ class ExperimentViewComponentTest extends TestCase
 
         $view->assertSee('Control');
     }
+    
+    public function testItFallsBackToTheSpecifiedSlotIfAGenericSlotIsNotSet()
+    {
+        Http::fake([
+            '*' => Http::response([
+                'featureFlags' => [
+                    'test' => 'test_c',
+                ],
+            ], 200),
+        ]);
+
+        $view = $this->blade(
+            '<x-posthog-experiment experiment="test" participant="1" fallback="test_a">
+                <x-slot name="control">
+                    Control
+                </x-slot>
+
+                <x-slot name="test_a">
+                    Test A
+                </x-slot>
+
+                <x-slot name="test_b">
+                    Test B
+                </x-slot>
+            </x-posthog-experiment>'
+        );
+
+        $view->assertDontSee('Control');
+        $view->assertSee('Test A');
+        $view->assertDontSee('Test B');
+    }
 
     public function testItFallsBackToAnEmptyStringIfThereIsNoControlOrGenericSlotSet()
     {
@@ -132,5 +163,7 @@ class ExperimentViewComponentTest extends TestCase
         );
 
         $view->assertSee('');
+        $view->assertDontSee('Test A');
+        $view->assertDontSee('Test B');
     }
 }
